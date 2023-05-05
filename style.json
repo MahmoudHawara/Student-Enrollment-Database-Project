@@ -1,0 +1,27 @@
+{
+    "QMainWindow": [{
+        "tittle": "ChatZone",
+        "icon": ":/Icons/Icons/telegram.png",
+        "frameless": true,
+        "transluscentBg": true,
+        "sizeGrip": "size_grip",
+        "shadow": [{
+            "color": "#fff",
+            "blurRadius": 20,
+            "xOffset": 20,
+            "yOffset": 20,
+            "centralWidget": "centralwidget"
+        }],
+        "navigation": [{
+            "minimize": "minimize",
+            "close": "close",
+            "restore": [{
+                "buttonName": "expand",
+                "normalIcon": "Images/expand-arrows.png",
+                "maximizedIcon": "Images/expand-arrows.png"
+            }],
+            "moveWindow": "header",
+            "tittleBar": "header"
+        }]
+    }]
+}
