@@ -132,12 +132,61 @@ class SignIn(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         self.ui.pushButton_4.clicked.connect(self.check)
         # self.header.mouseMoveEvent = self.MoveWindow
+        
+        
     def check(self):
-        self.close()
-        if(student):
-            Base.gotoProfile()
-        else:
-            Base.gotoMainPage()
+      
+        
+        checkDuplicate = 0;
+        cursor = mydb.cursor()
+
+        # Get the email and password entered by the user
+        email = ui.lineEdit_6.text()
+        password = ui.lineEdit_8.text()
+
+        # Hide both error labels
+        ui.label_8.setText("") # FOR EMAIL 
+        ui.label_5.setText("") #FOR PASSWORD 
+
+        # Check if there is a record in the database with the given email address
+        sql = "SELECT * FROM Students WHERE email = %s"
+        params = (email,)
+        cursor.execute(sql, params)
+        results = cursor.fetchall()
+
+        if len(results) == 0:
+            ui.label_8.setText("E-Mail is Invalid")
+
+        # Check if the password is correct for the record with the given email address
+        sql = "SELECT * FROM Students WHERE email = %s AND password = %s"
+        params = (email, password)
+        cursor.execute(sql, params)
+        results = cursor.fetchall()
+
+        if len(results) == 0:
+            ui.label_5.setText("Password is Incorrect")
+
+        # If both the email and password are incorrect, display both error messages
+        elif len(results) == 0 and len(results) == 0:
+            ui.label_8.setText("E-Mail is Invalid")
+            ui.label_5.setText("Password is Incorrect")
+
+        # Login successful, do something here
+        checkDuplicate = 1;
+        if len(results) == 1:
+            user_id = results[0][0]  # the ID is in the first column of the result
+            if user_id==1:
+            #CHANGE THE GLOBAL VARIABLE STUDENT = 1 FOR ADMIN 
+               student = 0;
+            else:
+               student = 1;
+        if checkDuplicate:
+            self.close()
+
+            if(student):
+                Base.gotoProfile()
+            else:
+                Base.gotoMainPage()
 
 class courseCreation(QMainWindow,Base):
     def __init__(self):
@@ -401,14 +450,55 @@ class groupCreation(QMainWindow,Base):
             rightNum = 1
         
         if rightName and rightNum:
-            self.clear()
-          #check database part
+          NotDuplicate = 0
+      
+          # Create a cursor object to execute SQL queries
+          cursor = mydb.cursor()
+
+          # Get the cohort name and number entered by the user
+          cohort_name = self.ui.lineEdit_6.text()
+          cohort_number = self.ui.lineEdit_8.text()
+
+          # Hide any existing error message
+          ui.label_6.setText("")
+
+          # Check if a record with the given cohort name and number already exists
+          sql = "SELECT * FROM studyGroups WHERE cohortName=%s AND cohortNumber=%s"
+          params = (cohort_name, cohort_number)
+          cursor.execute(sql, params)
+          results = cursor.fetchall()
+
+          if len(results) > 0:
+              self.ui.label_6.setText("There is already a study group with the same cohort name and number.")
+          else:
+              # Insert a new record into the database
+              sql = "INSERT INTO studyGroups (cohortName, cohortNumber) VALUES (%s, %s)"
+              params = (cohort_name, cohort_number)
+              cursor.execute(sql, params)
+              mydb.commit()
+              NotDuplicate = 1
+              # Show a notification that the record was inserted successfully
+              show_notification("Success", "Record inserted successfully")
+          if NotDuplicate:
+              self.clear()
+
+    
+    def show_notification(title, message):
+        # Create a system tray icon and show a notification
+        tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+        tray_icon.show()
+        tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
+
         
     def clear(self):
         self.close()
         Base.gotoMainPage()
         # loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        
+        
+        
+        
 
 class groupEdition(QMainWindow,Base):
     def __init__(self):
