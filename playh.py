@@ -2,6 +2,7 @@
 from Custom_Widgets.Widgets import *
 from PySide2 import *
 import sys
+import pymysql
 from PySide2.QtSql import QSqlDatabase, QSqlQuery
 import mysql.connector
 from PyQt5.QtGui import QPixmap, QImage
