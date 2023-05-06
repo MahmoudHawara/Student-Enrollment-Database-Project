@@ -171,12 +171,70 @@ class courseCreation(QMainWindow,Base):
             rightNum = 1
         
         if rightName and rightNum:
-            pass
-            #check database part
-        self.clear();
+            nameNotduplicated = 0
+            numNotduplicated = 0
+            cursor = mydb.cursor()
+
+            # Get the course name, hours entered by the user
+            course_name = self.ui.lineEdit_6.text()
+            hours = self.ui.lineEdit_8.text()
+            term = self.ui.comboBox_2.currentText()
+
+            # Hide any existing error message
+            #ui.label_6.setText("")
+
+            # Check if a record with the given course name already exists
+            sql = "SELECT * FROM Courses WHERE courseName = %s"
+            params = (course_name,)
+            cursor.execute(sql, params)
+            results = cursor.fetchall()
+
+            if len(results) > 0:
+                self.ui.label_6.setText("There is another Course with The Same Name")
+            else:
+                # Insert a new record into the database
+                sql = "INSERT INTO Courses (groupId, courseName, numberOfHours, term) VALUES (%s, %s, %s, %s)"
+                params = (group_id, course_name, hours, term)
+                cursor.execute(sql, params)
+                mydb.commit()
+                nameNotduplicated = 1
+
+                # Fetch all the student IDs in the group
+                sql = "SELECT studentId FROM Students WHERE groupId = %s"
+                params = (group_id,)
+                cursor.execute(sql, params)
+                results = cursor.fetchall()
+
+                if len(results) > 0:
+                    # Get the courseId of the newly added course
+                    sql = "SELECT courseId FROM Courses WHERE courseName = %s"
+                    params = (course_name,)
+                    cursor.execute(sql, params)
+                    courseId = cursor.fetchone()[0]
+
+                    # Insert a new record into the StudentCourses table for each student in the group
+                    for result in results:
+                        studentId = result[0]
+                        sql = "INSERT INTO StudentsWithCourses (studentId, courseId, courseGrade,groupId ) VALUES (%s, %s, %s, %s)"
+                        params = (studentId, courseId,  -1, group_id)
+                        cursor.execute(sql, params)
+                        mydb.commit()
+                    numNotduplicated = 0
+
+                # Show a notification that the record was inserted successfully
+                show_notification("Success", "Record inserted successfully")
+                if nameNotDuplicate and NumNotDuplicate:
+                  self.clear();
+    def show_notification(title, message):
+            # Create a system tray icon and show a notification
+            tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+            tray_icon.show()
+            tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
+                
     def clear(self):
-        self.close()
-        Base.gotoStudyGroupCoursesMainPage()
+         self.close()
+         Base.gotoStudyGroupCoursesMainPage()
+                
 class courseEdition(QMainWindow,Base):
     def __init__(self):
         QMainWindow.__init__(self)
@@ -210,11 +268,101 @@ class courseEdition(QMainWindow,Base):
           rightNum = 1
         
         if rightName and rightNum:
-            pass
-          #check database part
-        self.clear();
+            nameNotduplicated = 0
+            numNotduplicated = 0
+            cursor = mydb.cursor()
+
+            # Get the course name, hours entered by the user
+            course_name = self.ui.lineEdit_6.text()
+            hours = self.ui.lineEdit_8.text()
+            term = self.ui.comboBox_2.currentText()
+
+            # Hide any existing error message
+            #ui.label_6.setText("")
+
+            # Check if a record with the given course name already exists
+            sql = "SELECT * FROM Courses WHERE courseName = %s"
+            params = (course_name,)
+            cursor.execute(sql, params)
+            results = cursor.fetchall()
+
+            if len(results) > 0:
+                self.ui.label_6.setText("There is another Course with The Same Name")
+            else:
+                # Insert a new record into the database
+                sql = "INSERT INTO Courses (groupId, courseName, numberOfHours, term) VALUES (%s, %s, %s, %s)"
+                params = (group_id, course_name, hours, term)
+                cursor.execute(sql, params)
+                mydb.commit()
+                nameNotduplicated = 1
+
+                # Fetch all the student IDs in the group
+                sql = "SELECT studentId FROM Students WHERE groupId = %s"
+                params = (group_id,)
+                cursor.execute(sql, params)
+                results = cursor.fetchall()
+
+                if len(results) > 0:
+                    # Get the courseId of the newly added course
+                    sql = "SELECT courseId FROM Courses WHERE courseName = %s"
+                    params = (course_name,)
+                    cursor.execute(sql, params)
+                    courseId = cursor.fetchone()[0]
+
+                    # Insert a new record into the StudentCourses table for each student in the group
+                    for result in results:
+                        studentId = result[0]
+                        sql = "INSERT INTO StudentsWithCourses (studentId, courseId, courseGrade,groupId ) VALUES (%s, %s, %s, %s)"
+                        params = (studentId, courseId,  -1, group_id)
+                        cursor.execute(sql, params)
+                        mydb.commit()
+                    numNotduplicated = 0
+
+                # Show a notification that the record was inserted successfully
+                show_notification("Success", "Record inserted successfully")
+                if nameNotDuplicate and NumNotDuplicate:
+                  self.clear();
     def delete(self):
-        self.clear();
+        courseFound = 0
+        cursor = mydb.cursor()
+
+        # Get the course name entered by the user
+        course_name = self.ui.lineEdit_6.text()
+
+        # Hide any existing error message
+        #ui.label_6.setText("")
+
+        # Check if a record with the given course name exists
+        sql = "SELECT * FROM Courses WHERE courseName = %s"
+        params = (course_name,)
+        cursor.execute(sql, params)
+        results = cursor.fetchall()
+
+        if len(results) == 0:
+            self.ui.label_6.setText("No course found with that name")
+        else:
+            # Delete all the records for the given course in the StudentsWithCourses table
+            sql = "DELETE FROM StudentsWithCourses WHERE courseId = (SELECT courseId FROM Courses WHERE courseName = %s)"
+            params = (course_name,)
+            cursor.execute(sql, params)
+            mydb.commit()
+
+            # Delete the record for the given course in the Courses table
+            sql = "DELETE FROM Courses WHERE courseName = %s"
+            params = (course_name,)
+            cursor.execute(sql, params)
+            mydb.commit()
+            courseFound = 1
+            # Show a notification that the record was deleted successfully
+            show_notification("Success", "Record deleted successfully")
+            if courseFound:
+              self.clear()
+
+    def show_notification(title, message):
+        # Create a system tray icon and show a notification
+        tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+        tray_icon.show()
+        tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
     def clear(self):
         self.close()
         Base.gotoCourse()
