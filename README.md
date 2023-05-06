@@ -18,7 +18,7 @@ Contains information about each student's enrollment in a course, including thei
  ## images
 Contains any images associated with the student, such as profile pictures.
 # ERD 
-
+![ERD](/Images/ERD.png)
 # Purpose
 The purpose of this project is to provide a tool for managing student enrollment information, making it easier for the administrator to organize and track student information in a centralized database. By providing a user-friendly interface and well-organized database tables, this project can help reduce the time and effort required to manage student enrollment information.
 Features
