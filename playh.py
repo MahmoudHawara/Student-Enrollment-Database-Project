@@ -6,6 +6,7 @@ import pymysql
 from PySide2.QtSql import QSqlDatabase, QSqlQuery
 import mysql.connector
 from PyQt5.QtGui import QPixmap, QImage
+import input_checker as c
 
 mydb = mysql.connector.connect(
   host="db4free.net",
@@ -148,6 +149,25 @@ class courseCreation(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def create(self):
+        courseName = self.ui.lineEdit_6.text()
+        courseNum = self.ui.lineEdit_8.text()
+        label_8.setVisible(False)
+        label_5.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_course_name(courseName)) or not(c.checkNotEmpty(courseName)):
+          label_8.setVisible(True)
+        else:
+          label_8.setVisible(False)
+          rightName = 1
+        if not(c.check_digits_only(courseNum)) or not(c.checkNotEmpty(courseNum)):
+          label_5.setVisible(True)
+        else:
+          label_5.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear();
     def clear(self):
         self.close()
@@ -165,6 +185,25 @@ class courseEdition(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def update(self):
+        courseName = self.ui.lineEdit_6.text()
+        courseNum = self.ui.lineEdit_8.text()
+        label_8.setVisible(False)
+        label_5.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_course_name(courseName)) or not(c.checkNotEmpty(courseName)):
+          label_8.setVisible(True)
+        else:
+          label_8.setVisible(False)
+          rightName = 1
+        if not(c.check_digits_only(courseNum)) or not(c.checkNotEmpty(courseNum)):
+          label_5.setVisible(True)
+        else:
+          label_5.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear();
     def delete(self):
         self.clear();
@@ -183,6 +222,25 @@ class groupCreation(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def create(self):
+        cohortName = self.ui.lineEdit_6.text()
+        cohortNum = self.ui.lineEdit_8.text()
+        label_8.setVisible(False)
+        label_5.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_letters_only(cohortName)) or not(c.checkNotEmpty(cohortName)):
+          label_8.setVisible(True)
+        else:
+          label_8.setVisible(False)
+          rightName = 1
+        if not(c.check_digits_only(cohortNum)) or not(c.checkNotEmpty(cohortNum)):
+          label_5.setVisible(True)
+        else:
+          label_5.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear()
     def clear(self):
         self.close()
@@ -202,6 +260,25 @@ class groupEdition(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def update(self):
+        cohortName = self.ui.lineEdit_6.text()
+        cohortNum = self.ui.lineEdit_8.text()
+        label_8.setVisible(False)
+        label_5.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_letters_only(cohortName)) or not(c.checkNotEmpty(cohortName)):
+          label_8.setVisible(True)
+        else:
+          label_8.setVisible(False)
+          rightName = 1
+        if not(c.check_digits_only(cohortNum)) or not(c.checkNotEmpty(cohortNum)):
+          label_5.setVisible(True)
+        else:
+          label_5.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear()
     def delete(self):
         self.clear()
@@ -328,6 +405,42 @@ class studentAddition(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def add(self):
+        firstName = self.ui.lineEdit_12.text()
+        lastName = self.ui.lineEdit_18.text()
+        phone = self.ui.lineEdit_20.text()
+        ID = self.ui.lineEdit_19.text()
+        label_17.setVisible(False)
+        label_27.setVisible(False)
+        label_31.setVisible(False)
+        label_30.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_letters_only(firstName)) or not(c.checkNotEmpty(firstName)):
+          label_17.setVisible(True)
+        else:
+          label_17.setVisible(False)
+          rightName = 1
+          
+        if not(c.check_letters_only(lastName)) or not(c.checkNotEmpty(lastName)):
+          label_27.setVisible(True)
+        else:
+          label_27.setVisible(False)
+          rightNum = 1
+          
+        if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
+          label_31.setVisible(True)
+        else:
+          label_31.setVisible(False)
+          rightNum = 1
+          
+        if not(c.check_phone_number(phone)) or not(c.checkNotEmpty(phone)):
+          label_30.setVisible(True)
+        else:
+          label_30.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear()
     def clear(self):
         self.close()
@@ -345,6 +458,42 @@ class studentEdition(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
     def update(self):
+        firstName = self.ui.lineEdit_12.text()
+        lastName = self.ui.lineEdit_18.text()
+        phone = self.ui.lineEdit_20.text()
+        ID = self.ui.lineEdit_19.text()
+        label_17.setVisible(False)
+        label_27.setVisible(False)
+        label_31.setVisible(False)
+        label_30.setVisible(False)
+        rightName = 0
+        rightNum = 0
+        if not(c.check_letters_only(firstName)) or not(c.checkNotEmpty(firstName)):
+          label_17.setVisible(True)
+        else:
+          label_17.setVisible(False)
+          rightName = 1
+          
+        if not(c.check_letters_only(lastName)) or not(c.checkNotEmpty(lastName)):
+          label_27.setVisible(True)
+        else:
+          label_27.setVisible(False)
+          rightNum = 1
+          
+        if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
+          label_31.setVisible(True)
+        else:
+          label_31.setVisible(False)
+          rightNum = 1
+          
+        if not(c.check_phone_number(phone)) or not(c.checkNotEmpty(phone)):
+          label_30.setVisible(True)
+        else:
+          label_30.setVisible(False)
+          rightNum = 1
+        
+        if rightName and rightNum:
+          #check database part
         self.clear();
     def delete(self):
         self.clear();
