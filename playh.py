@@ -691,35 +691,94 @@ class studentAddition(QMainWindow,Base):
         self.ui.label_27.setVisible(False)
         self.ui.label_31.setVisible(False)
         self.ui.label_30.setVisible(False)
-        rightName = 0
-        rightNum = 0
+        rightFirst = 0
+        rightSecond = 0
+        rightPhone = 0
+        rightId = 0
+        
         if not(c.check_letters_only(firstName)) or not(c.checkNotEmpty(firstName)):
             self.ui.label_17.setVisible(True)
         else:
             self.ui.label_17.setVisible(False)
-            rightName = 1
+            rightFirst = 1
           
         if not(c.check_letters_only(lastName)) or not(c.checkNotEmpty(lastName)):
             self.ui.label_27.setVisible(True)
         else:
             self.ui.label_27.setVisible(False)
-            rightNum = 1
-        if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
+            rightSecond = 1
+        if not(c.check_ID(ID)) or not(c.checkNotEmpty(ID)):
             self.ui.label_31.setVisible(True)
         else:
             self.ui.label_31.setVisible(False)
-            rightNum = 1
+            rightId = 1
           
         if not(c.check_phone_number(phone)) or not(c.checkNotEmpty(phone)):
             self.ui.label_30.setVisible(True)
         else:
             self.ui.label_30.setVisible(False)
-            rightNum = 1
+            rightPhone = 1
         
-        if rightName and rightNum:
-            pass
-          #check database part
-        self.clear()
+        if rightFirst and rightSecond and rightPhone and rightId:
+            cursor = mydb.cursor()
+            studentNotduplicated = 0
+            # Get the course name, hours entered by the user
+            firstName = self.ui.lineEdit_12.text()
+            lastName = self.ui.lineEdit_18.text()
+            phone = self.ui.lineEdit_20.text()
+            ID = self.ui.lineEdit_19.text()
+            gender = self.ui.comboBox_2.currentText()
+            BDate = self.ui.dateEdit.date()
+            # Hide any existing error message
+            #ui.label_6.setText("")            
+
+            sql = "SELECT * FROM Students WHERE studentId = %s"
+            params = (ID,)
+            cursor.execute(sql, params)
+            results = cursor.fetchall()
+
+            if len(results) > 0:
+                self.ui.label_6.setText("There is another Student with The ID")
+            else:
+                # Insert a new record into the database
+                mycursor.execute("SELECT profilePhoto FROM Images WHERE imageName = 'user' ")
+                blob_data = mycursor.fetchall()[0][0]
+                qimage = QImage.fromData(blob_data)
+                defultImage = QPixmap.fromImage(qimage)    
+                sql = "INSERT INTO Students (studentId, groupId, firstName, lastName, phoneNumber, birthDate, gender, email, password, profilePhoto) VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s)"
+                params = (ID, group_id, firstName, lastName, phone, BDate, gender, str(ID)+ "@learnloop.edu.eg", firstNmae+ID ,defultImage)
+                cursor.execute(sql, params)
+                mydb.commit()
+                studentNotduplicated = 1
+
+                # Fetch all the student IDs in the group
+                sql = "SELECT courseId FROM Courses WHERE groupId = %s"
+                params = (group_id,)
+                cursor.execute(sql, params)
+                results = cursor.fetchall()
+
+                if len(results) > 0:
+
+                    # Insert a new record into the StudentCourses table for each student in the group
+                    for result in results:
+                        courseId = result[0]
+                        sql = "INSERT INTO StudentsWithCourses (studentId, courseId, courseGrade, groupId ) VALUES (%s, %s, %s, %s)"
+                        params = (ID, courseId,  -1, group_id)
+                        cursor.execute(sql, params)
+                        mydb.commit()
+                    
+                    if NotDuplicate:
+                        self.clear()
+                        show_notification("Success", "Record inserted successfully")
+
+    
+    def show_notification(title, message):
+        # Create a system tray icon and show a notification
+        tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+        tray_icon.show()
+        tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
+                if studentNotduplicated:
+                      self.clear()
     def clear(self):
         self.close()
         Base.gotoStudyGroupStudents()
@@ -763,7 +822,7 @@ class studentEdition(QMainWindow,Base):
             self.ui.label_27.setVisible(False)
             rightNum = 1
           
-        if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
+        if not(c.check_ID(ID)) or not(c.checkNotEmpty(ID)):
             self.ui.label_31.setVisible(True)
         else:
             self.ui.label_31.setVisible(False)
