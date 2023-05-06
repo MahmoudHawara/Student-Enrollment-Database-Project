@@ -511,21 +511,41 @@ class studyGroupStudents(QMainWindow,Base):
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui)
         self.ui.pushButton.clicked.connect(self.newstudent)
-        self.on_table_changed();
-    
-    def on_table_changed(self):
+        self.ui.lineEdit.textChanged.connect(self.search)
+        # self.ui.mode.clicked.connect(self.mode)
+        self.mydata=[];
+        self.table_init()
+
+    def search(self):
+        srch = self.ui.lineEdit.text()
+        if srch != "":
+            nedata=[]
+            for record in self.mydata:
+                if srch in str(record[0]):
+                    nedata.append(record)
+                elif srch in record[1]:
+                    nedata.append(record)
+                elif srch in record[2]:
+                    nedata.append(record)
+            self.on_table_changed(nedata)
+        else:
+            self.on_table_changed(self.mydata)
+    def table_init(self):
+        conn = pymysql.connect(host="db4free.net", user="learnloop", password="learnloop5", db="learnloop")
+        cursor = conn.cursor()
+        query = "SELECT studentId,CONCAT(firstName,' ',lastName) as Name,email \
+        FROM Students\
+        WHERE groupId=2;"
+        cursor.execute(query)
+        data = cursor.fetchall()
+        self.mydata=list(data)
+        cursor.close()
+        self.on_table_changed(self.mydata)
+
+    def on_table_changed(self,mydata):
                 print(f"Table changed: ")
         
         # Clear the table
-                conn = pymysql.connect(host="db4free.net", user="learnloop", password="learnloop5", db="learnloop")
-                cursor = conn.cursor()
-                query = "SELECT studentId,CONCAT(firstName,' ',lastName) as Name,email \
-                FROM Students\
-                WHERE groupId=2;"
-                cursor.execute(query)
-                data = cursor.fetchall()
-                mydata=list(data)
-                mydata=list(data)
                 x=0;
                 for record in mydata:
                         print(record)
@@ -554,12 +574,14 @@ class studyGroupStudents(QMainWindow,Base):
                         row = self.ui.table.rowCount()
                         self.ui.table.insertRow(row)
                         for column in range(x):
-                                item = QTableWidgetItem(record[column])
+                                z=record[column]
+                                z=str(z);
+                                item = QTableWidgetItem(z)
                                 item.setTextAlignment(Qt.AlignCenter);
                                 # item(QColor(255, 255, 255))  # Set text color to blue
                                 self.ui.table.setItem(row, column, item)
                         button = QPushButton("Click Me")
-                        button.setObjectName("but_"+str(row))
+                        button.setObjectName("but_"+str(record[0]))
                         button.clicked.connect(self.on_button_clicked)
                         self.ui.table.setCellWidget(row, x, button)
                         
@@ -619,8 +641,19 @@ class studyGroupStudents(QMainWindow,Base):
             Base.gotoStudentAddtion()
         # self.header.mouseMoveEvent = self.MoveWindow
 
-
 class studyGroupCoursesMainPage(QMainWindow,Base):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        from courseMainPage_H_ui import Ui_MainWindow
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        loadJsonStyle(self, self.ui)
+        self.ui.pushButton.clicked.connect(self.newcourse)
+    
+    def newcourse(self):
+            self.close()
+            Base.gotoCourseCreate()
+        # self.header.mouseMoveEvent = self.MoveWindowclass studyGroupCoursesMainPage(QMainWindow,Base):
     def __init__(self):
         QMainWindow.__init__(self)
         from courseMainPage_H_ui import Ui_MainWindow
@@ -642,8 +675,71 @@ class mainwindow(QMainWindow,Base):
         # nam="PU_"+str(id)
         self.ui.pushButton.clicked.connect(self.newstudygroup)
         loadJsonStyle(self, self.ui)
-        self.fillscroll([["1","Electrical Power"],["2","Electrical Power"],["3","Computer"],["4","computer"],["3","Computer"],["4","computer"]])
+        # self.box_init([["1","Electrical Power"],["2","Electrical Power"],["3","Computer"],["4","computer"],["3","Computer"],["4","computer"]])
         # self.header.mouseMoveEvent = self.MoveWindow
+        # self.ui.lineEdit_6.textChanged.connect(self.search)
+        # self.ui.mode.clicked.connect(self.mode)
+        self.mydata=[];
+        
+        mycursor = mydb.cursor()
+        
+        mycursor.execute("SELECT COUNT(*) FROM Students;")
+        s = mycursor.fetchall()[0][0]
+        
+        mycursor.execute("SELECT COUNT(*) FROM Courses;")
+        s2 = mycursor.fetchall()[0][0]
+        
+        mycursor.execute("SELECT COUNT(*) FROM studyGroups;")
+        s3 = mycursor.fetchall()[0][0]
+        self.ui.numOfGroups.setText(str(s))
+        self.ui.numOfGroups_2.setText(str(s))
+        self.ui.numOfGroups_3.setText(str(s))
+        mycursor.execute("SELECT groupId, cohortName, cohortNumber FROM studyGroups;")
+        self.s4=[]
+        # print(mycursor.fetchall())
+        for x in mycursor.fetchall():
+            print(x)
+            self.s4.append(x)
+        # mycursor.execute("SELECT lastName FROM Students WHERE studentId = {}".format(currentStudentID))
+        # s2= mycursor.fetchall()[0][0]
+        # self.ui.label.setText(s)
+        # mycursor.execute("SELECT profilePhoto FROM Students WHERE studentId = {}".format(currentStudentID))
+        # blob_data = mycursor.fetchall()[0][0]
+        # qimage = QImage.fromData(blob_data)
+        # profilePhoto = QPixmap.fromImage(qimage)
+        print(self.s4)
+        
+        mycursor.close()
+        self.fillscroll(self.s4)
+# SELECT COUNT(*) FROM Students;
+# SELECT COUNT(*) FROM Courses;
+# SELECT COUNT(*) FROM studyGroups;
+
+
+# SELECT groupId, cohortName, cohortNumber FROM studyGroups;
+    def search(self):
+        srch = self.ui.lineEdit_6.text()
+        # self.ui.verticalLayout_5.deleteLater()
+        # while self.ui.verticalLayout_5.count():
+        #     child = self.ui.verticalLayout_5.takeAt(0)
+        #     if child.widget():
+        #         child.widget().setParent(None)
+        # from adminMainPage_ui import Ui_MainWindow
+        # self.ui = Ui_MainWindow()
+        if srch != "":
+            nedata=[]
+            for record in self.s4:
+                if srch in str(record[0]):
+                    nedata.append(record)
+                elif srch in str(record[1]):
+                    nedata.append(record)
+                # elif srch in str(record[2]):
+                #     nedata.append(record)
+            self.fillscroll(nedata)
+        else:
+            self.fillscroll(self.s4)
+        self.close()
+        Base.gotoMainPage()
     def newstudygroup(self):
         self.close()
         Base.gotoStudyGroupCreate()
@@ -805,7 +901,7 @@ class mainwindow(QMainWindow,Base):
             hbox=QHBoxLayout()
             print(20);
             for j in range(0,min(3,len(ls)-i)):
-                z=self.createbox(ls[i+j][0],ls[i+j][1],i+j)
+                z=self.createbox(str(ls[i+j][2]),ls[i+j][1],ls[i+j][0])
                 print(z)
                 hbox.addWidget(z)
             hbox.setContentsMargins(0,5,0,0)
@@ -826,7 +922,7 @@ class mainwindow(QMainWindow,Base):
         print("Button clicked")
         self.close()
         Base.gotoStudyGroupEdition()
-
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = SignIn()
