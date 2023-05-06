@@ -474,16 +474,196 @@ class studyGroupCoursesMainPage(QMainWindow,Base):
 class mainwindow(QMainWindow,Base):
     def __init__(self):
         QMainWindow.__init__(self)
-        from adminMainPage_H_ui import Ui_MainWindow
+        from adminMainPage_ui import Ui_MainWindow
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # nam="PU_"+str(id)
         self.ui.pushButton.clicked.connect(self.newstudygroup)
         loadJsonStyle(self, self.ui)
+        self.fillscroll([["1","Electrical Power"],["2","Electrical Power"],["3","Computer"],["4","computer"],["3","Computer"],["4","computer"]])
         # self.header.mouseMoveEvent = self.MoveWindow
     def newstudygroup(self):
         self.close()
         Base.gotoStudyGroupCreate()
+    def createbox(self,l1,l2,num):
+        l3="st"
+        if(l1=="1"):
+            l3="st"
+        elif(l1=="2"):
+            l3="nd"
+        elif(l1=="3"):
+            l3="rd"
+        else: 
+            l3="th"
+        font2 = QFont()
+        font2.setFamily(u"Bahnschrift Condensed")
+        font2.setPointSize(22)
+        font2.setBold(False)
+        font2.setWeight(50)
+        self.ui.numOfGroups.setFont(font2)
+        font4 = QFont()
+        font4.setFamily(u"Bahnschrift Condensed")
+        font4.setPointSize(15)
+        font4.setBold(False)
+        font4.setWeight(50)
+        frame_23 = QFrame()
+        frame_23.setObjectName(u"fr_"+str(num))
+        frame_23.setMinimumSize(QSize(240, 150))
+        frame_23.setMaximumSize(QSize(240, 150))
+        frame_23.setStyleSheet(u"background: #0F3460;\n"
+"color: white;\n"
+"border-radius: 5px;\n"
+"letter-spacing: 2px;")
+        frame_23.setFrameShape(QFrame.StyledPanel)
+        frame_23.setFrameShadow(QFrame.Raised)
+        verticalLayout_12 = QVBoxLayout(frame_23)
+        verticalLayout_12.setSpacing(5)
+        verticalLayout_12.setObjectName(u"vertfr_"+str(num))
+        verticalLayout_12.setContentsMargins(0, 0, 0, 0)
+        verticalSpacer_19 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        verticalLayout_12.addItem(verticalSpacer_19)
+
+        frame_24 = QFrame(frame_23)
+        frame_24.setObjectName(u"frA_"+str(num))
+        frame_24.setMinimumSize(QSize(0, 30))
+        frame_24.setMaximumSize(QSize(16777215, 30))
+        frame_24.setFrameShape(QFrame.StyledPanel)
+        frame_24.setFrameShadow(QFrame.Raised)
+        horizontalLayout_23 = QHBoxLayout(frame_24)
+        horizontalLayout_23.setSpacing(2)
+        horizontalLayout_23.setObjectName(u"horfr_"+str(num))
+        horizontalLayout_23.setContentsMargins(0, 0, 0, 0)
+        label_22 = QLabel(frame_24)
+        label_22.setObjectName(u"Alabel_"+str(num))
+        label_22.setMinimumSize(QSize(0, 30))
+        label_22.setMaximumSize(QSize(16777215, 30))
+        label_22.setFont(font2)
+        label_22.setLineWidth(5)
+        label_22.setText(l1)
+
+        horizontalLayout_23.addWidget(label_22, 0, Qt.AlignRight|Qt.AlignBottom)
+
+        label_23 = QLabel(frame_24)
+        label_23.setObjectName(u"Blabel_"+str(num))
+        label_23.setMinimumSize(QSize(0, 20))
+        label_23.setMaximumSize(QSize(16777215, 20))
+        label_23.setFont(font4)
+        label_23.setFrameShadow(QFrame.Plain)
+        label_23.setAlignment(Qt.AlignCenter)
+        label_23.setIndent(-1)
+        label_23.setText(l3)
+
+        horizontalLayout_23.addWidget(label_23, 0, Qt.AlignLeft|Qt.AlignBottom)
+
+
+        verticalLayout_12.addWidget(frame_24, 0, Qt.AlignHCenter)
+
+        frame_25 = QFrame(frame_23)
+        frame_25.setObjectName(u"frB_"+str(num))
+        frame_25.setFrameShape(QFrame.StyledPanel)
+        frame_25.setFrameShadow(QFrame.Raised)
+        horizontalLayout_18 = QHBoxLayout(frame_25)
+        horizontalLayout_18.setSpacing(2)
+        horizontalLayout_18.setObjectName(u"horfrB_"+str(num))
+        horizontalLayout_18.setContentsMargins(0, 0, 0, 0)
+
+        verticalLayout_12.addWidget(frame_25, 0, Qt.AlignHCenter|Qt.AlignBottom)
+
+        label_24 = QLabel(frame_23)
+        label_24.setObjectName(u"Clabel_"+str(num))
+        label_24.setMaximumSize(QSize(16777215, 35))
+        font6 = QFont()
+        font6.setFamily(u"Bahnschrift Condensed")
+        font6.setPointSize(18)
+        font6.setBold(False)
+        font6.setWeight(50)
+        label_24.setFont(font6)
+        label_24.setStyleSheet(u"")
+        label_24.setText(l2)
+
+        verticalLayout_12.addWidget(label_24, 0, Qt.AlignHCenter)
+
+        frame_26 = QFrame(frame_23)
+        frame_26.setObjectName(u"frBu_"+str(num))
+        frame_26.setMinimumSize(QSize(0, 33))
+        frame_26.setMaximumSize(QSize(16777215, 33))
+        frame_26.setStyleSheet(u"")
+        frame_26.setFrameShape(QFrame.StyledPanel)
+        frame_26.setFrameShadow(QFrame.Raised)
+        horizontalLayout_24 = QHBoxLayout(frame_26)
+        horizontalLayout_24.setSpacing(20)
+        horizontalLayout_24.setObjectName(u"horBU_"+str(num))
+        horizontalLayout_24.setContentsMargins(0, 5, 0, 0)
+        pushButton_12 = QPushButton(frame_26)
+        pushButton_12.setObjectName(u"EpushButton_"+str(num))
+        pushButton_12.setMinimumSize(QSize(75, 28))
+        pushButton_12.setMaximumSize(QSize(75, 28))
+        pushButton_12.setSizeIncrement(QSize(0, 0))
+        font7 = QFont()
+        font7.setFamily(u"Bahnschrift Condensed")
+        font7.setPointSize(14)
+        font7.setBold(False)
+        font7.setWeight(50)
+        pushButton_12.setFont(font7)
+        pushButton_12.setCursor(QCursor(Qt.PointingHandCursor))
+        pushButton_12.setText("Enter")
+        pushButton_12.clicked.connect(self.on_button_clicked)
+        pushButton_12.setStyleSheet(u"background: #E94560;\n"
+"border-radius: 3px;\n"
+"")
+
+        horizontalLayout_24.addWidget(pushButton_12)
+
+        pushButton_13 = QPushButton(frame_26)
+        pushButton_13.setObjectName(u"FpushButton_"+str(num))
+        pushButton_13.setMinimumSize(QSize(75, 28))
+        pushButton_13.setMaximumSize(QSize(75, 28))
+        pushButton_13.setSizeIncrement(QSize(0, 0))
+        pushButton_13.setFont(font7)
+        pushButton_13.setCursor(QCursor(Qt.PointingHandCursor))
+        pushButton_13.setText("Edit")
+        pushButton_13.clicked.connect(self.on_button_clicked2)
+        pushButton_13.setStyleSheet(u"background: #E94560;\n"
+"border-radius: 3px;\n"
+"")
+
+        horizontalLayout_24.addWidget(pushButton_13)
+
+
+        verticalLayout_12.addWidget(frame_26, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+
+        verticalSpacer_20 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        verticalLayout_12.addItem(verticalSpacer_20)
+        # frame.show()
+        return frame_23
+    def fillscroll(self,ls):
+        for i in range(0,len(ls),3):
+            hbox=QHBoxLayout()
+            print(20);
+            for j in range(0,min(3,len(ls)-i)):
+                z=self.createbox(ls[i+j][0],ls[i+j][1],i+j)
+                print(z)
+                hbox.addWidget(z)
+            hbox.setContentsMargins(0,5,0,0)
+            self.ui.verticalLayout_5.addLayout(hbox)
+    def on_button_clicked(self):
+        # print(bu);
+        sending_button = self.sender()
+        print('%s Clicked!' % str(sending_button.objectName()))
+        # This method will be called when the button is clicked
+        print("Button clicked")
+        self.close()
+        Base.gotoStudyGroup()
+    def on_button_clicked2(self):
+        # print(bu);
+        sending_button = self.sender()
+        print('%s Clicked!' % str(sending_button.objectName()))
+        # This method will be called when the button is clicked
+        print("Button clicked")
+        self.close()
+        Base.gotoStudyGroupEdition()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
