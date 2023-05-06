@@ -3,6 +3,14 @@ from Custom_Widgets.Widgets import *
 from PySide2 import *
 import sys
 from PySide2.QtSql import QSqlDatabase, QSqlQuery
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="db4free.net",
+  user="reemmahmoud",
+  password="dbfinalproject",
+  database="dbfinalproject"
+)
 
 student=0;
 
@@ -210,6 +218,32 @@ class studyGroupMain(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         self.ui.pushButton.clicked.connect(self.StudyGCourses)
         self.ui.pushButton_2.clicked.connect(self.StudyGStudents)
+        mycursor = mydb.cursor()
+        
+        mycursor.execute("SELECT COUNT(*) FROM Courses WHERE groupId = {}".format(str(currentStudyGroupID)))
+        self.ui.coursesNumber = mycursor.fetchall()[0][0]
+
+        mycursor.execute("SELECT COUNT(*) FROM Students WHERE groupId = {}".format(str(currentStudyGroupID)))
+        self.ui.localStudentNumber = mycursor.fetchall()[0][0]
+       
+        mycursor.execute("SELECT cohortName FROM studyGroups WHERE groupId = {}".format(str(currentStudyGroupID)))
+        self.ui.currentStudyGroupName = mycursor.fetchall()[0][0]
+        
+        mycursor.execute("SELECT image FROM Images WHERE imageName = 'studyGroupImage'")
+        self.blob_data = mycursor.fetchall()[0][0]
+        self.ui.qimage = QImage.fromData(self.blob_data)
+        self.ui.studyGroupImage = QPixmap.fromImage(qimage)
+        
+        mydb.close()
+        
+        self.ui.separated_SGname = self.currentStudyGroupName.split(',')
+        self.ui.label.setText(_translate("MainWindow", self.ui.separated_SGname[0]))
+        self.ui.label_3.setText(_translate("MainWindow", self.ui.separated_SGname[1]))
+        self.ui.label_2.setText(_translate("MainWindow", self.ui.separated_SGname[2]))
+        self.ui.label_5.setText(_translate("MainWindow", str(self.ui.coursesNumber)))
+        self.ui.label_7.setText(_translate("MainWindow", str(self.ui.localStudentNumber)))
+        self.ui.label_4.setPixmap(self.ui.studyGroupImage)
+        
     def StudyGCourses(self):
         self.close()
         Base.gotoStudyGroupCoursesMainPage()
