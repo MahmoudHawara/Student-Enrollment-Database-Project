@@ -4,6 +4,7 @@ from PySide2 import *
 import sys
 from PySide2.QtSql import QSqlDatabase, QSqlQuery
 import mysql.connector
+from PyQt5.QtGui import QPixmap, QImage
 
 mydb = mysql.connector.connect(
   host="db4free.net",
@@ -229,7 +230,7 @@ class studyGroupMain(QMainWindow,Base):
         mycursor.execute("SELECT cohortName FROM studyGroups WHERE groupId = {}".format(str(currentStudyGroupID)))
         self.ui.currentStudyGroupName = mycursor.fetchall()[0][0]
         
-        mycursor.execute("SELECT image FROM Images WHERE imageName = 'studyGroupImage'")
+        mycursor.execute("SELECT image FROM Images WHERE imageName = '4'")
         self.blob_data = mycursor.fetchall()[0][0]
         self.ui.qimage = QImage.fromData(self.blob_data)
         self.ui.studyGroupImage = QPixmap.fromImage(qimage)
@@ -287,6 +288,26 @@ class profile(QMainWindow,Base):
         self.ui.pushButton.clicked.connect(self.myset)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        
+        mycursor = mydb.cursor()
+        
+        mycursor.execute("SELECT firstName FROM Students WHERE studentId = {}".format(currentStudentID))
+        self.ui.firstName = mycursor.fetchall()[0][0]
+
+        mycursor.execute("SELECT lastName FROM STUDENTS WHERE studentId = {}".format(currentStudentID))
+        self.ui.lastName = mycursor.fetchall()[0][0]
+        
+        mycursor.execute("SELECT profilePhoto FROM STUDENTS WHERE studentId = {}".format(currentStudentID))
+        self.ui.blob_data = mycursor.fetchall()[0][0]
+        self.ui.qimage = QImage.fromData(self.blob_data)
+        self.ui.profile_image = QPixmap.fromImage(qimage)
+        mydb.close()
+        
+        self.ui.label.setText(_translate("MainWindow", self.ui.firstName + ' '+ self.ui.lastName))
+        self.ui.label_2.setText(_translate("MainWindow", str(currentStudentID)))
+        self.ui.icon5.addPixmap(QtGui.QPixmap(self.ui.profile_image))
+        self.ui.label_4.setPixmap(profile_image)
+        
     def mycourses(self):
         self.close()
         Base.gotoProfileCourses()
