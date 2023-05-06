@@ -291,37 +291,36 @@ class groupEdition(QMainWindow,Base):
 class studyGroupMain(QMainWindow,Base):
     def __init__(self):
         QMainWindow.__init__(self)
-        from fsg_H_ui import Ui_MainWindow
+        from studyGroupMainPage_ui import Ui_MainWindow
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui)
-        self.ui.pushButton.clicked.connect(self.StudyGCourses)
+        self.ui.pushButton_3.clicked.connect(self.StudyGCourses)
         self.ui.pushButton_2.clicked.connect(self.StudyGStudents)
         mycursor = mydb.cursor()
-        
         mycursor.execute("SELECT COUNT(*) FROM Courses WHERE groupId = {}".format(str(currentStudyGroupID)))
-        self.ui.coursesNumber = mycursor.fetchall()[0][0]
+        coursesNumber = mycursor.fetchall()[0][0]
 
         mycursor.execute("SELECT COUNT(*) FROM Students WHERE groupId = {}".format(str(currentStudyGroupID)))
-        self.ui.localStudentNumber = mycursor.fetchall()[0][0]
+        localStudentNumber = mycursor.fetchall()[0][0]
        
-        mycursor.execute("SELECT cohortName FROM studyGroups WHERE groupId = {}".format(str(currentStudyGroupID)))
-        self.ui.currentStudyGroupName = mycursor.fetchall()[0][0]
+        mycursor.execute("SELECT cohortNumber,cohortName FROM studyGroups WHERE groupId = {}".format(str(currentStudyGroupID)))
+        currentStudyGroupName = mycursor.fetchall()[0]
         
-        mycursor.execute("SELECT image FROM Images WHERE imageName = '4'")
-        self.blob_data = mycursor.fetchall()[0][0]
-        self.ui.qimage = QImage.fromData(self.blob_data)
-        self.ui.studyGroupImage = QPixmap.fromImage(qimage)
+        mycursor.execute("SELECT image FROM Images WHERE imageName = '2'")
+        blob_data = mycursor.fetchall()[0][0]
+        qimage = QImage.fromData(blob_data)
+        studyGroupImage = QPixmap.fromImage(qimage)
         
         mydb.close()
-        
-        self.ui.separated_SGname = self.currentStudyGroupName.split(',')
-        self.ui.label.setText(_translate("MainWindow", self.ui.separated_SGname[0]))
-        self.ui.label_3.setText(_translate("MainWindow", self.ui.separated_SGname[1]))
-        self.ui.label_2.setText(_translate("MainWindow", self.ui.separated_SGname[2]))
-        self.ui.label_5.setText(_translate("MainWindow", str(self.ui.coursesNumber)))
-        self.ui.label_7.setText(_translate("MainWindow", str(self.ui.localStudentNumber)))
-        self.ui.label_4.setPixmap(self.ui.studyGroupImage)
+        print(currentStudyGroupName)
+        # separated_SGname = currentStudyGroupName.split(',')
+        self.ui.label_9.setText( str(currentStudyGroupName[0]))
+        self.ui.label_10.setText( "st")
+        self.ui.label_14.setText( str(currentStudyGroupName[1]))
+        self.ui.label_11.setText( str(coursesNumber))
+        self.ui.label_7.setText(str(localStudentNumber))
+        self.ui.label_4.setPixmap(studyGroupImage)
         
     def StudyGCourses(self):
         self.close()
@@ -353,8 +352,27 @@ class profileCourses(QMainWindow,Base):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui)
+        self.ui.lineEdit.textChanged.connect(self.search)
+        # self.ui.mode.clicked.connect(self.mode)
+        self.mydata=[];
+
+    def search(self):
+        srch = self.ui.lineEdit.text()
+        if srch != "":
+            nedata=[]
+            for record in self.ui.mydata:
+                if srch in str(record[0]):
+                    nedata.append(record)
+                elif srch in record[1]:
+                    nedata.append(record)
+                elif srch in record[2]:
+                    nedata.append(record)
+            self.ui.on_table_changed(nedata)
+        else:
+            self.ui.on_table_changed(self.ui.mydata)
         # self.show()
         # self.header.mouseMoveEvent = self.MoveWindow
+
 
 class profile(QMainWindow,Base):
     def __init__(self):
@@ -370,21 +388,21 @@ class profile(QMainWindow,Base):
         mycursor = mydb.cursor()
         
         mycursor.execute("SELECT firstName FROM Students WHERE studentId = {}".format(currentStudentID))
-        self.ui.firstName = mycursor.fetchall()[0][0]
+        s = mycursor.fetchall()[0][0]
 
         mycursor.execute("SELECT lastName FROM Students WHERE studentId = {}".format(currentStudentID))
-        self.ui.lastName = mycursor.fetchall()[0][0]
-        
+        s2= mycursor.fetchall()[0][0]
+        self.ui.label.setText(s)
         mycursor.execute("SELECT profilePhoto FROM Students WHERE studentId = {}".format(currentStudentID))
-        self.ui.blob_data = mycursor.fetchall()[0][0]
-        self.ui.qimage = QImage.fromData(self.blob_data)
-        self.ui.profile_image = QPixmap.fromImage(qimage)
-        mydb.close()
+        blob_data = mycursor.fetchall()[0][0]
+        qimage = QImage.fromData(blob_data)
+        profilePhoto = QPixmap.fromImage(qimage)
+        mycursor.close()
         
-        self.ui.label.setText(_translate("MainWindow", self.ui.firstName + ' '+ self.ui.lastName))
-        self.ui.label_2.setText(_translate("MainWindow", str(currentStudentID)))
-        self.ui.icon5.addPixmap(QtGui.QPixmap(self.ui.profile_image))
-        self.ui.label_4.setPixmap(profile_image)
+        self.ui.label.setText( s + ' '+ s2)
+        self.ui.label_2.setText(str(currentStudentID))
+        self.ui.icon5.addPixmap(QPixmap(profilePhoto))
+        self.ui.label_4.setPixmap(QPixmap(profilePhoto))
         
     def mycourses(self):
         self.close()
