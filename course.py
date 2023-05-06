@@ -14,6 +14,8 @@ from PySide2 import QtCore, QtGui, QtWidgets
 # from PyQt5 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QColor
 from PySide2.QtSql import QSqlDatabase, QSqlQuery
+import pymysql
+
 import Images_rc
 
 class Ui_MainWindow(object):
@@ -334,12 +336,10 @@ class Ui_MainWindow(object):
                 self.table = QtWidgets.QTableWidget()
                 self.verticalLayout_5.addWidget(self.table);
                 self.verticalLayout_5.setAlignment(QtCore.Qt.AlignCenter);
-                db = QSqlDatabase.addDatabase("QSQLITE")
-                db.setHostName("localhost")
-                db.setDatabaseName("mydatabase.db")
-                if not db.open():
-                        print("Cannot open database")
-                        sys.exit(1)
+                self.conn = pymysql.connect(host="db4free.net", user="learnloop", password="learnloop5", db="learnloop")
+
+        # Create a cursor object
+                self.cursor = self.conn.cursor()
                 self.table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
                 self.table.autoFillBackground();
                 # self.table.;
@@ -349,7 +349,8 @@ class Ui_MainWindow(object):
                 print(self.frame_3.height());
                 self.table.setMaximumWidth(1200)
                 self.table.setMaximumHeight(500)
-                self.on_table_changed(tablename=self.table);
+                self.on_table_changed();
+                self.cursor.close()
                 self.verticalLayout_2.addWidget(self.frame_4)
                 self.verticalLayout.addWidget(self.mainPage)
                 MainWindow.setCentralWidget(self.centralwidget)
@@ -368,31 +369,43 @@ class Ui_MainWindow(object):
                 self.label.setText(_translate("MainWindow", "ECE 115"))
                 self.pushButton.setText(_translate("MainWindow", "Edit"))
                 self.textEdit.setWhatsThis(_translate("MainWindow", "<html><head/><body><p>hfgfg</p></body></html>"))
-        def on_table_changed(self, tablename):
-                print(f"Table changed: {tablename}")
-        
+
+        def on_table_changed(self):
+                # print(f"Table changed: {tablename}")
+                query = "SELECT StudentsWithCourses.studentId,CONCAT(firstName,' ',lastName) as Name,email,courseGrade \
+ FROM StudentsWithCourses\
+ INNER JOIN Students ON StudentsWithCourses.studentId=Students.studentId\
+ WHERE courseId=1;" 
+                self.cursor.execute(query)
+                data = self.cursor.fetchall()
+                mydata=list(data)
+                x=0;
+                for record in mydata:
+                        print(record)
+                        x=len(record)
+                        
         # Clear the table
                 self.table.clearContents()
                 self.table.setRowCount(0)
-                
+                self.table.setColumnCount(x)
                 # Refetch data from the database
-                query = QSqlQuery()
-                query.prepare("SELECT * from Persons;")
-                if not query.exec_():
-                        print("Cannot execute query")
-                        sys.exit(1)
+                # query = QSqlQuery()
+                # query.prepare("SELECT * from Persons;")
+                # if not query.exec_():
+                #         print("Cannot execute query")
+                #         sys.exit(1)
                 
                 # Repopulate the table with data from the database
-                self.table.setColumnCount(query.record().count())
+                # self.table.setColumnCount(query.record().count())
                 # self.table.setRowCount(query.size())
                 
-                self.table.setHorizontalHeaderLabels([query.record().fieldName(i) for i in range(query.record().count())])
+                self.table.setHorizontalHeaderLabels(["ID","Name","Term","Number of Hours","Grade"])
                 
-                while query.next():
+                for record in mydata:
                         row = self.table.rowCount()
                         self.table.insertRow(row)
-                        for column in range(query.record().count()):
-                                item = QtWidgets.QTableWidgetItem(str(query.value(column)))
+                        for column in range(x):
+                                item = QtWidgets.QTableWidgetItem(record[column])
                                 item.setTextAlignment(QtCore.Qt.AlignCenter);
                                 # item(QColor(255, 255, 255))  # Set text color to blue
                                 self.table.setItem(row, column, item)
