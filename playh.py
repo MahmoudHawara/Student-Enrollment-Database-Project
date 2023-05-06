@@ -367,40 +367,51 @@ class studyGroupStudents(QMainWindow,Base):
                 print(f"Table changed: ")
         
         # Clear the table
-                db = QSqlDatabase.addDatabase("QSQLITE")
-                db.setHostName("localhost")
-                db.setDatabaseName("mydatabase.db")
-                if not db.open():
-                        print("Cannot open database")
-                        sys.exit(1)
+                conn = pymysql.connect(host="db4free.net", user="learnloop", password="learnloop5", db="learnloop")
+                cursor = conn.cursor()
+                query = "SELECT studentId,CONCAT(firstName,' ',lastName) as Name,email \
+                FROM Students\
+                WHERE groupId=2;"
+                cursor.execute(query)
+                data = cursor.fetchall()
+                mydata=list(data)
+                mydata=list(data)
+                x=0;
+                for record in mydata:
+                        print(record)
+                        x=len(record)
                 self.ui.table.clearContents()
                 self.ui.table.setRowCount(0)
                 
                 # Refetch data from the database
-                query = QSqlQuery()
-                query.prepare("SELECT * from Persons3;")
-                if not query.exec_():
-                        print("Cannot execute query")
-                        sys.exit(1)
+                # query = QSqlQuery()
+                # query.prepare("SELECT * from Persons3;")
+                # if not query.exec_():
+                #         print("Cannot execute query")
+                #         sys.exit(1)
                 
                 # Repopulate the table with data from the database
-                self.ui.table.setColumnCount(query.record().count()+1)
+                if(x):
+                    x+=1
+                self.ui.table.setColumnCount(x)
+                if(x):
+                    x-=1
                 # self.table.setRowCount(query.size())
                 
-                self.ui.table.setHorizontalHeaderLabels([query.record().fieldName(i) for i in range(query.record().count())])
+                self.ui.table.setHorizontalHeaderLabels(["ID","Name","Email",""])
                 self.ui.table.horizontalHeader()
-                while query.next():
+                for record in mydata:
                         row = self.ui.table.rowCount()
                         self.ui.table.insertRow(row)
-                        for column in range(query.record().count()):
-                                item = QTableWidgetItem(str(query.value(column)))
+                        for column in range(x):
+                                item = QTableWidgetItem(record[column])
                                 item.setTextAlignment(Qt.AlignCenter);
                                 # item(QColor(255, 255, 255))  # Set text color to blue
                                 self.ui.table.setItem(row, column, item)
                         button = QPushButton("Click Me")
                         button.setObjectName("but_"+str(row))
                         button.clicked.connect(self.on_button_clicked)
-                        self.ui.table.setCellWidget(row, query.record().count(), button)
+                        self.ui.table.setCellWidget(row, x, button)
                         
                 
                 odd_color = QColor(22,33,62) # light gray
@@ -457,6 +468,7 @@ class studyGroupStudents(QMainWindow,Base):
             self.close()
             Base.gotoStudentAddtion()
         # self.header.mouseMoveEvent = self.MoveWindow
+
 
 class studyGroupCoursesMainPage(QMainWindow,Base):
     def __init__(self):
