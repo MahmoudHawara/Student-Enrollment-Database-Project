@@ -34,7 +34,7 @@ Create new study groups and courses, as well as add students to these groups.
 Edit and delete existing study groups, courses, and student information.
 View the total number of study groups and the number of students and courses in each study group.
 View the information and grades for each student in a particular course.
-Student Features
+# Student Features
 Once logged in, students can only view their own profile, which includes:
 
 The courses they are enrolled in.
