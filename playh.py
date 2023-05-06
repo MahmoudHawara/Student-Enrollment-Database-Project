@@ -10,13 +10,14 @@ import input_checker as c
 
 mydb = mysql.connector.connect(
   host="db4free.net",
-  user="reemmahmoud",
-  password="dbfinalproject",
-  database="dbfinalproject"
+  user="learnloop",
+  password="learnloop5",
+  database="learnloop"
 )
 
 student=0;
-
+currentStudyGroupID=2;
+currentStudentID=2;
 class Base():
     cur_theme = 0
     # connect main app to welcome screen
@@ -151,23 +152,24 @@ class courseCreation(QMainWindow,Base):
     def create(self):
         courseName = self.ui.lineEdit_6.text()
         courseNum = self.ui.lineEdit_8.text()
-        label_8.setVisible(False)
-        label_5.setVisible(False)
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_course_name(courseName)) or not(c.checkNotEmpty(courseName)):
-          label_8.setVisible(True)
+            self.ui.label_8.setVisible(True)
         else:
-          label_8.setVisible(False)
-          rightName = 1
+            self.ui.label_8.setVisible(False)
+            rightName = 1
         if not(c.check_digits_only(courseNum)) or not(c.checkNotEmpty(courseNum)):
-          label_5.setVisible(True)
+            self.ui.label_5.setVisible(True)
         else:
-          label_5.setVisible(False)
-          rightNum = 1
+            self.ui.label_5.setVisible(False)
+            rightNum = 1
         
         if rightName and rightNum:
-          #check database part
+            pass
+            #check database part
         self.clear();
     def clear(self):
         self.close()
@@ -187,22 +189,23 @@ class courseEdition(QMainWindow,Base):
     def update(self):
         courseName = self.ui.lineEdit_6.text()
         courseNum = self.ui.lineEdit_8.text()
-        label_8.setVisible(False)
-        label_5.setVisible(False)
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_course_name(courseName)) or not(c.checkNotEmpty(courseName)):
-          label_8.setVisible(True)
+            self.ui.label_8.setVisible(True)
         else:
-          label_8.setVisible(False)
+          self.ui.label_8.setVisible(False)
           rightName = 1
         if not(c.check_digits_only(courseNum)) or not(c.checkNotEmpty(courseNum)):
-          label_5.setVisible(True)
+          self.ui.label_5.setVisible(True)
         else:
-          label_5.setVisible(False)
+          self.ui.label_5.setVisible(False)
           rightNum = 1
         
         if rightName and rightNum:
+            pass
           #check database part
         self.clear();
     def delete(self):
@@ -217,6 +220,8 @@ class groupCreation(QMainWindow,Base):
         from groupcreation_H_ui import Ui_MainWindow
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
         self.ui.pushButton_4.clicked.connect(self.create)
         self.ui.pushButton_5.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
@@ -224,24 +229,25 @@ class groupCreation(QMainWindow,Base):
     def create(self):
         cohortName = self.ui.lineEdit_6.text()
         cohortNum = self.ui.lineEdit_8.text()
-        label_8.setVisible(False)
-        label_5.setVisible(False)
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_letters_only(cohortName)) or not(c.checkNotEmpty(cohortName)):
-          label_8.setVisible(True)
+            self.ui.label_8.setVisible(True)
         else:
-          label_8.setVisible(False)
-          rightName = 1
+            self.ui.label_8.setVisible(False)
+            rightName = 1
         if not(c.check_digits_only(cohortNum)) or not(c.checkNotEmpty(cohortNum)):
-          label_5.setVisible(True)
+            self.ui.label_5.setVisible(True)
         else:
-          label_5.setVisible(False)
-          rightNum = 1
+            self.ui.label_5.setVisible(False)
+            rightNum = 1
         
         if rightName and rightNum:
+            self.clear()
           #check database part
-        self.clear()
+        
     def clear(self):
         self.close()
         Base.gotoMainPage()
@@ -262,22 +268,23 @@ class groupEdition(QMainWindow,Base):
     def update(self):
         cohortName = self.ui.lineEdit_6.text()
         cohortNum = self.ui.lineEdit_8.text()
-        label_8.setVisible(False)
-        label_5.setVisible(False)
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_letters_only(cohortName)) or not(c.checkNotEmpty(cohortName)):
-          label_8.setVisible(True)
+            self.ui.label_8.setVisible(True)
         else:
-          label_8.setVisible(False)
-          rightName = 1
+            self.ui.label_8.setVisible(False)
+            rightName = 1
         if not(c.check_digits_only(cohortNum)) or not(c.checkNotEmpty(cohortNum)):
-          label_5.setVisible(True)
+            self.ui.label_5.setVisible(True)
         else:
-          label_5.setVisible(False)
-          rightNum = 1
+            self.ui.label_5.setVisible(False)
+            rightNum = 1
         
         if rightName and rightNum:
+            pass
           #check database part
         self.clear()
     def delete(self):
@@ -427,37 +434,37 @@ class studentAddition(QMainWindow,Base):
         lastName = self.ui.lineEdit_18.text()
         phone = self.ui.lineEdit_20.text()
         ID = self.ui.lineEdit_19.text()
-        label_17.setVisible(False)
-        label_27.setVisible(False)
-        label_31.setVisible(False)
-        label_30.setVisible(False)
+        self.ui.label_17.setVisible(False)
+        self.ui.label_27.setVisible(False)
+        self.ui.label_31.setVisible(False)
+        self.ui.label_30.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_letters_only(firstName)) or not(c.checkNotEmpty(firstName)):
-          label_17.setVisible(True)
+            self.ui.label_17.setVisible(True)
         else:
-          label_17.setVisible(False)
-          rightName = 1
+            self.ui.label_17.setVisible(False)
+            rightName = 1
           
         if not(c.check_letters_only(lastName)) or not(c.checkNotEmpty(lastName)):
-          label_27.setVisible(True)
+            self.ui.label_27.setVisible(True)
         else:
-          label_27.setVisible(False)
-          rightNum = 1
-          
+            self.ui.label_27.setVisible(False)
+            rightNum = 1
         if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
-          label_31.setVisible(True)
+            self.ui.label_31.setVisible(True)
         else:
-          label_31.setVisible(False)
-          rightNum = 1
+            self.ui.label_31.setVisible(False)
+            rightNum = 1
           
         if not(c.check_phone_number(phone)) or not(c.checkNotEmpty(phone)):
-          label_30.setVisible(True)
+            self.ui.label_30.setVisible(True)
         else:
-          label_30.setVisible(False)
-          rightNum = 1
+            self.ui.label_30.setVisible(False)
+            rightNum = 1
         
         if rightName and rightNum:
+            pass
           #check database part
         self.clear()
     def clear(self):
@@ -480,37 +487,38 @@ class studentEdition(QMainWindow,Base):
         lastName = self.ui.lineEdit_18.text()
         phone = self.ui.lineEdit_20.text()
         ID = self.ui.lineEdit_19.text()
-        label_17.setVisible(False)
-        label_27.setVisible(False)
-        label_31.setVisible(False)
-        label_30.setVisible(False)
+        self.ui.label_17.setVisible(False)
+        self.ui.label_27.setVisible(False)
+        self.ui.label_31.setVisible(False)
+        self.ui.label_30.setVisible(False)
         rightName = 0
         rightNum = 0
         if not(c.check_letters_only(firstName)) or not(c.checkNotEmpty(firstName)):
-          label_17.setVisible(True)
+            self.ui.label_17.setVisible(True)
         else:
-          label_17.setVisible(False)
-          rightName = 1
+            self.ui.label_17.setVisible(False)
+            rightName = 1
           
         if not(c.check_letters_only(lastName)) or not(c.checkNotEmpty(lastName)):
-          label_27.setVisible(True)
+            self.ui.label_27.setVisible(True)
         else:
-          label_27.setVisible(False)
-          rightNum = 1
+            self.ui.label_27.setVisible(False)
+            rightNum = 1
           
         if not(c.check_digits_only(ID)) or not(c.checkNotEmpty(ID)):
-          label_31.setVisible(True)
+            self.ui.label_31.setVisible(True)
         else:
-          label_31.setVisible(False)
-          rightNum = 1
+            self.ui.label_31.setVisible(False)
+            rightNum = 1
           
         if not(c.check_phone_number(phone)) or not(c.checkNotEmpty(phone)):
-          label_30.setVisible(True)
+            self.ui.label_30.setVisible(True)
         else:
-          label_30.setVisible(False)
-          rightNum = 1
+            self.ui.label_30.setVisible(False)
+            rightNum = 1
         
         if rightName and rightNum:
+            pass
           #check database part
         self.clear();
     def delete(self):
