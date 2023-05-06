@@ -149,6 +149,9 @@ class courseCreation(QMainWindow,Base):
         self.ui.pushButton_5.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
+        
     def create(self):
         courseName = self.ui.lineEdit_6.text()
         courseNum = self.ui.lineEdit_8.text()
@@ -183,9 +186,11 @@ class courseEdition(QMainWindow,Base):
         self.ui.pushButton_4.clicked.connect(self.update)
         self.ui.pushButton_5.clicked.connect(self.delete)
         self.ui.pushButton_6.clicked.connect(self.clear)
-        
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
+        
     def update(self):
         courseName = self.ui.lineEdit_6.text()
         courseNum = self.ui.lineEdit_8.text()
@@ -226,6 +231,9 @@ class groupCreation(QMainWindow,Base):
         self.ui.pushButton_5.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
+        
     def create(self):
         cohortName = self.ui.lineEdit_6.text()
         cohortNum = self.ui.lineEdit_8.text()
@@ -265,6 +273,9 @@ class groupEdition(QMainWindow,Base):
         self.ui.pushButton_6.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_8.setVisible(False)
+        self.ui.label_5.setVisible(False)
+        
     def update(self):
         cohortName = self.ui.lineEdit_6.text()
         cohortNum = self.ui.lineEdit_8.text()
@@ -429,6 +440,10 @@ class studentAddition(QMainWindow,Base):
         self.ui.pushButton_5.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_17.setVisible(False)
+        self.ui.label_27.setVisible(False)
+        self.ui.label_31.setVisible(False)
+        self.ui.label_30.setVisible(False)
     def add(self):
         firstName = self.ui.lineEdit_12.text()
         lastName = self.ui.lineEdit_18.text()
@@ -482,6 +497,11 @@ class studentEdition(QMainWindow,Base):
         self.ui.pushButton_4.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
+        self.ui.label_17.setVisible(False)
+        self.ui.label_27.setVisible(False)
+        self.ui.label_31.setVisible(False)
+        self.ui.label_30.setVisible(False)
+        
     def update(self):
         firstName = self.ui.lineEdit_12.text()
         lastName = self.ui.lineEdit_18.text()
