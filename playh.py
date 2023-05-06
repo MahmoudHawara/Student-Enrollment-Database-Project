@@ -295,10 +295,10 @@ class profile(QMainWindow,Base):
         mycursor.execute("SELECT firstName FROM Students WHERE studentId = {}".format(currentStudentID))
         self.ui.firstName = mycursor.fetchall()[0][0]
 
-        mycursor.execute("SELECT lastName FROM STUDENTS WHERE studentId = {}".format(currentStudentID))
+        mycursor.execute("SELECT lastName FROM Students WHERE studentId = {}".format(currentStudentID))
         self.ui.lastName = mycursor.fetchall()[0][0]
         
-        mycursor.execute("SELECT profilePhoto FROM STUDENTS WHERE studentId = {}".format(currentStudentID))
+        mycursor.execute("SELECT profilePhoto FROM Students WHERE studentId = {}".format(currentStudentID))
         self.ui.blob_data = mycursor.fetchall()[0][0]
         self.ui.qimage = QImage.fromData(self.blob_data)
         self.ui.profile_image = QPixmap.fromImage(qimage)
