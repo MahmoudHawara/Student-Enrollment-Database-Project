@@ -862,11 +862,56 @@ class studentEdition(QMainWindow,Base):
                 mydb.commit()
                 studentNotduplicated = 1
 
-                if studentNotduplicated:
-                      self.clear();
+                show_notification("Success", "Record inserted successfully")
+            if studentNotduplicated:
+              self.clear()
+
+    
+    def show_notification(title, message):
+        # Create a system tray icon and show a notification
+        tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+        tray_icon.show()
+        tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
         
     def delete(self):
-        self.clear();
+        cursor = mydb.cursor()
+        studentFound =0
+        # Get the course name entered by the user
+        studentId = self.ui.lineEdit_19.text()
+
+        # Check if a record with the given course name exists
+        sql = "SELECT * FROM Students WHERE studentId = %s"
+        params = (studentId,)
+        cursor.execute(sql, params)
+        results = cursor.fetchall()
+
+        if len(results) == 0:
+            self.ui.label_6.setText("No Student found with that ID")
+        else:
+            # Delete all the records for the given course in the StudentsWithCourses table
+            sql = "DELETE FROM StudentsWithCourses WHERE sudentId = %s"
+            params = (currentStudentID,)
+            cursor.execute(sql, params)
+            mydb.commit()
+
+            # Delete the record for the given course in the Courses table
+            sql = "DELETE FROM Students WHERE studentId = %s"
+            params = (currentStudentID,)
+            cursor.execute(sql, params)
+            mydb.commit()
+            studentFound = 1
+            # Show a notification that the record was deleted successfully
+            show_notification("Success", "Record inserted successfully")
+            if studentFound:
+              self.clear()
+
+    
+    def show_notification(title, message):
+        # Create a system tray icon and show a notification
+        tray_icon = QtWidgets.QSystemTrayIcon(QtGui.QIcon("path/to/icon.png"), parent=app)
+        tray_icon.show()
+        tray_icon.showMessage(title, message, QtWidgets.QSystemTrayIcon.Information)
+        
     def clear(self):
         self.close()
         Base.gotoStudyGroupStudents()
