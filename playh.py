@@ -746,7 +746,7 @@ class studentAddition(QMainWindow,Base):
                 qimage = QImage.fromData(blob_data)
                 defultImage = QPixmap.fromImage(qimage)    
                 sql = "INSERT INTO Students (studentId, groupId, firstName, lastName, phoneNumber, birthDate, gender, email, password, profilePhoto) VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s)"
-                params = (ID, group_id, firstName, lastName, phone, BDate, gender, str(ID)+ "@learnloop.edu.eg", firstNmae+ID ,defultImage)
+                params = (ID, group_id, firstName, lastName, phone, BDate, gender, str(ID)+ "@learnloop.edu.eg", firstNmae+ID ,defultImage,)
                 cursor.execute(sql, params)
                 mydb.commit()
                 studentNotduplicated = 1
@@ -763,7 +763,7 @@ class studentAddition(QMainWindow,Base):
                     for result in results:
                         courseId = result[0]
                         sql = "INSERT INTO StudentsWithCourses (studentId, courseId, courseGrade, groupId ) VALUES (%s, %s, %s, %s)"
-                        params = (ID, courseId,  -1, group_id)
+                        params = (ID, courseId,  -1, group_id,)
                         cursor.execute(sql, params)
                         mydb.commit()
                     
