@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="Controles">
+    <file>Images/undo2.png</file>
+    <file>Images/user.png</file>
+    <file>Images/undo.png</file>
+    <file>Images/return.png</file>
+    <file>Images/back.png</file>
+    <file>Images/setting.png</file>
+    <file>Images/close.png</file>
+    <file>Images/expand-arrows.png</file>
+    <file>Images/minimize-sign.png</file>
+  </qresource>
+  <qresource prefix="Vectors">
+    <file>Images/3.png</file>
+    <file>Images/2.png</file>
+    <file>Images/4.png</file>
+    <file>Images/1.png</file>
+  </qresource>
+</RCC>
