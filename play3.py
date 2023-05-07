@@ -18,7 +18,7 @@ mydb = mysql.connector.connect(
 
 student=0;
 currentStudyGroupID=2;
-currentStudentID=2;
+currentStudentID=856234;
 currentCourseID=16;
 class Base():
     cur_theme = 0
@@ -776,10 +776,13 @@ class adminprofile(QMainWindow,Base):
         QMainWindow.__init__(self)
         from adminProfile_ui import Ui_MainWindow
         self.ui = Ui_MainWindow()
+        self.ui.pushButton_5.clicked.connect(self.sIN)
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui)
         # self.ui.pushButton.clicked.connect(self.editcourse)
-    
+    def sIN(self):
+        self.close()
+        Base.gotoSingIn()
     
     
 
@@ -811,7 +814,6 @@ class profileCourses(QMainWindow,Base):
         loadJsonStyle(self, self.ui)
         self.ui.lineEdit.textChanged.connect(self.search)
         self.ui.settings_2.clicked.connect(self.stt)
-
         # self.ui.mode.clicked.connect(self.mode)
         self.mydata=[];
 
@@ -833,7 +835,7 @@ class profileCourses(QMainWindow,Base):
         # self.header.mouseMoveEvent = self.MoveWindow
     def stt(self):
         self.close()
-        Base.gotoadminpro()
+        Base.gotoProfile()
 
 class profile(QMainWindow,Base):
     def __init__(self):
@@ -844,6 +846,7 @@ class profile(QMainWindow,Base):
         self.ui.pushButton_2.clicked.connect(self.mycourses)
         self.ui.pushButton_3.clicked.connect(self.myset)
         self.ui.settings_2.clicked.connect(self.stt)
+        self.ui.expand_3.clicked.connect(self.back)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
         
@@ -865,7 +868,9 @@ class profile(QMainWindow,Base):
         self.ui.label_10.setText(str(currentStudentID))
         # self.ui.icon5.addPixmap(QPixmap(profilePhoto))
         # self.ui.label_4.setPixmap(QPixmap(profilePhoto))
-        
+    def back(self):
+        self.close()
+        Base.gotoStudyGroupStudents()
     def mycourses(self):
         self.close()
         Base.gotoProfileCourses()
@@ -1079,9 +1084,9 @@ class studentEdition(QMainWindow,Base):
         from studentEdition_ui import Ui_MainWindow
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.pushButton_2.clicked.connect(self.update)
-        self.ui.pushButton_3.clicked.connect(self.delete)
-        self.ui.pushButton_4.clicked.connect(self.clear)
+        self.ui.pushButton_4.clicked.connect(self.update)
+        self.ui.pushButton_5.clicked.connect(self.delete)
+        self.ui.pushButton_6.clicked.connect(self.clear)
         loadJsonStyle(self, self.ui)
         # self.header.mouseMoveEvent = self.MoveWindow
         self.ui.label_17.setVisible(False)
@@ -1136,11 +1141,33 @@ class studentEdition(QMainWindow,Base):
             rightNum = 1
         
         if rightName and rightNum:
-            pass
+            mycursor = mydb.cursor()
+            studentNotduplicated = 0
+            # Get the course name, hours entered by the user
+            firstName = self.ui.lineEdit_12.text()
+            lastName = self.ui.lineEdit_18.text()
+            phone = self.ui.lineEdit_20.text()
+            ID = self.ui.lineEdit_19.text()
+            gender = self.ui.comboBox_2.currentText()
+            BDate = self.ui.dateEdit.date().toString('yyyy-MM-dd')
+            
+            sql = "UPDATE Students SET  groupId= %s, firstName= %s, lastName= %s, phoneNumber= %s, birthDate= %s,gender= %s WHERE studentId = %s; "
+            params = ( currentStudyGroupID, firstName, lastName, phone, BDate,gender,currentStudentID)
+            mycursor.execute(sql, params)
+            mydb.commit()
+            self.clear();
+            
           #check database part
-        self.clear();
     def delete(self):
-        self.clear();
+        mycursor = mydb.cursor()
+        sql = "DELETE FROM StudentsWithCourses WHERE studentId = %s"
+        params = (currentStudentID,)
+        mycursor.execute(sql, params)
+        sql = "DELETE FROM Students WHERE studentId = %s"
+        params = (currentStudentID,)
+        mycursor.execute(sql, params)
+        mydb.commit()
+        self.clear()
     def clear(self):
         self.close()
         Base.gotoStudyGroupStudents()
@@ -1277,9 +1304,18 @@ class studyGroupStudents(QMainWindow,Base):
     def on_button_clicked(self):
         # print(bu);
         sending_button = self.sender()
+        currentStudentID=0
+        sending_button = self.sender()
+        for x in str(sending_button.objectName()):
+                if x<'9':
+                    currentStudentID*=10
+                    currentStudentID+=int(x)-int('0')
+        # print('%s Clicked!' % str(sending_button.objectName()))
         print('%s Clicked!' % str(sending_button.objectName()))
         # This method will be called when the button is clicked
         print("Button clicked")
+        self.close()
+        self.gotoStudentEdition()
 
     def newstudent(self):
             self.close()
@@ -1759,7 +1795,7 @@ class mainwindow(QMainWindow,Base):
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = mainwindow()
+    window = SignIn()
     window.show()
     # widget = QStackedWidget()
     # widget.setWindowFlags(Qt.CustomizeWindowHint)
