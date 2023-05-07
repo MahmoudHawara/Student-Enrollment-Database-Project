@@ -835,9 +835,36 @@ class studentEdition(QMainWindow,Base):
             rightNum = 1
         
         if rightName and rightNum:
-            pass
-          #check database part
-        self.clear();
+            cursor = mydb.cursor()
+            studentNotduplicated = 0
+            # Get the course name, hours entered by the user
+            firstName = self.ui.lineEdit_12.text()
+            lastName = self.ui.lineEdit_18.text()
+            phone = self.ui.lineEdit_20.text()
+            gender = self.ui.comboBox_2.currentText()
+            BDate = self.ui.dateEdit.date()
+
+            sql = "SELECT * FROM Students WHERE studentId = %s"
+            params = (ID,)
+            cursor.execute(sql, params)
+            results = cursor.fetchall()
+
+            if len(results) > 0:
+                self.ui.label_6.setText("There is another Student with The ID")
+            else:
+                mycursor.execute("SELECT profilePhoto FROM Images WHERE imageName = 'user' ")
+                blob_data = mycursor.fetchall()[0][0]
+                qimage = QImage.fromData(blob_data)
+                defultImage = QPixmap.fromImage(qimage)    
+                sql = "ALTER TABLE Students SET firstName = %s, lastName = %s, phoneNumber = %s, birthDate = %s, gender = %s"
+                params = (firstName, lastName, phone, BDate, gender)
+                cursor.execute(sql, params)
+                mydb.commit()
+                studentNotduplicated = 1
+
+                if studentNotduplicated:
+                      self.clear();
+        
     def delete(self):
         self.clear();
     def clear(self):
